@@ -14,7 +14,7 @@ const db = require("./db");
 dotenv.config();
 
 // Load environment values from .env
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3003;
 const DATABASE_URL = process.env.DATABASE_URL;
 const JWT_SECRET = process.env.JWT_SECRET || "pluralist-secret";
 const OPEN_ROUTER_BASE_URL = process.env.OPEN_ROUTER_BASE_URL || "https://api.openrouter.ai/v1/chat/completions";
