@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pluralist AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- index.html - non-signed-in home page for Pluralist AI -->
+  <header>
+    <div class="brand">Pluralist AI</div>
+    <nav>
+      <a href="/auth.html">Sign In / Sign Up</a>
+      <a href="/reader.html">Reader Home</a>
+      <a href="/publisher.html">Publisher</a>
+      <a href="/admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Pluralist AI News</h1>
+      <p>Read social and political issues, vote on article issues, and use the AI chat in the sticky footer.</p>
+    </section>
+
+    <section class="cards">
+      <article>
+        <h2>Read Articles</h2>
+        <p>Please sign in or sign up to vote and access reader content.</p>
+      </article>
+      <article>
+        <h2>Publisher Dashboard</h2>
+        <p>Publish articles, audio, and video content for admin review.</p>
+      </article>
+      <article>
+        <h2>Admin Review</h2>
+        <p>Admin moderates news, approves issues, and publishes articles.</p>
+      </article>
+    </section>
+  </main>
+
+  <footer class="chat-footer sticky-footer">
+    <div class="chat-box">
+      <div class="chat-header">Pluralist AI Chat</div>
+      <div class="chat-body" id="chatBody"></div>
+      <form id="chatForm" class="chat-form">
+        <input type="text" name="message" id="chatMessage" placeholder="Ask political or social issue questions only" required maxlength="300" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Article Detail - Pluralist AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- article.html - article detail page with vote buttons -->
+  <header>
+    <div class="brand">Pluralist AI</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/reader.html">Reader</a>
+      <a href="/publisher.html">Publisher</a>
+      <a href="/admin.html">Admin</a>
+      <a href="#" id="signOutLink">Sign Out</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="article-list" id="articleList"></section>
+  </main>
+
+  <footer class="chat-footer sticky-footer">
+    <div class="chat-box">
+      <div class="chat-header">Pluralist AI Chat</div>
+      <div class="chat-body" id="chatBody"></div>
+      <form id="chatForm" class="chat-form">
+        <input type="text" name="message" id="chatMessage" placeholder="Ask political or social issue questions only" required maxlength="300" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

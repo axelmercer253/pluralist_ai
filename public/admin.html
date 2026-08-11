@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard - Pluralist AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- admin.html - admin dashboard with RSS fetch and moderation -->
+  <header>
+    <div class="brand">Pluralist AI</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/reader.html">Reader</a>
+      <a href="/publisher.html">Publisher</a>
+      <a href="#" id="signOutLink">Sign Out</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="admin-panel">
+      <h1>Admin Dashboard</h1>
+      <p>Review RSS news, select issue topics, and publish articles to readers.</p>
+    </section>
+
+    <section class="form-card" id="rssNewsSection">
+      <h2>Google RSS News</h2>
+      <div id="rssNewsList"></div>
+    </section>
+
+    <section class="form-card" id="issueReviewSection">
+      <h2>Issue Review</h2>
+      <form id="issueReviewForm">
+        <label for="issueTitle">News Title</label>
+        <input id="issueTitle" name="title" readonly />
+
+        <label for="issueSource">Source</label>
+        <input id="issueSource" name="source" readonly />
+
+        <label for="issueContent">Article Text</label>
+        <textarea id="issueContent" name="content" readonly maxlength="3000"></textarea>
+
+        <button id="analyzeButton" type="button">Analyze Issues</button>
+        <div id="aiIssues"></div>
+
+        <button id="publishButton" type="submit" disabled>Publish Article</button>
+      </form>
+    </section>
+
+    <section class="form-card" id="moderationSection">
+      <h2>Pending Moderation</h2>
+      <div id="pendingModeration"></div>
+    </section>
+  </main>
+
+  <footer class="chat-footer sticky-footer">
+    <div class="chat-box">
+      <div class="chat-header">Pluralist AI Chat</div>
+      <div class="chat-body" id="chatBody"></div>
+      <form id="chatForm" class="chat-form">
+        <input type="text" name="message" id="chatMessage" placeholder="Ask political or social issue questions only" required maxlength="300" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In / Sign Up - Pluralist AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- auth.html - sign up and login page for readers and publishers -->
+  <header>
+    <div class="brand">Pluralist AI</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/reader.html">Reader</a>
+      <a href="/publisher.html">Publisher</a>
+      <a href="/admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="form-card">
+      <h2>Sign In</h2>
+      <form id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" name="email" type="email" required />
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" name="password" type="password" required />
+        <button type="submit">Sign In</button>
+      </form>
+    </section>
+
+    <section class="form-card">
+      <h2>Sign Up</h2>
+      <form id="signUpForm">
+        <label for="signupEmail">Email</label>
+        <input id="signupEmail" name="email" type="email" required />
+        <label for="signupPassword">Password</label>
+        <input id="signupPassword" name="password" type="password" required />
+        <label for="signupRole">Account Type</label>
+        <select id="signupRole" name="role" required>
+          <option value="reader">Reader</option>
+          <option value="publisher">Publisher</option>
+          <option value="admin">Admin</option>
+        </select>
+        <label for="adminSecret">Admin Secret (only for admin sign-up)</label>
+        <input id="adminSecret" name="adminSecret" type="password" />
+        <button type="submit">Sign Up</button>
+      </form>
+    </section>
+
+    <section class="form-card">
+      <p>Publisher accounts can upload media and submit articles for admin moderation.</p>
+      <p>Readers can sign in to vote on issues attached to articles and use AI chat.</p>
+    </section>
+  </main>
+
+  <footer class="chat-footer sticky-footer">
+    <div class="chat-box">
+      <div class="chat-header">Pluralist AI Chat</div>
+      <div class="chat-body" id="chatBody"></div>
+      <form id="chatForm" class="chat-form">
+        <input type="text" name="message" id="chatMessage" placeholder="Ask political or social issue questions only" required maxlength="300" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

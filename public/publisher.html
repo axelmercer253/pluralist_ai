@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publisher Dashboard - Pluralist AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- publisher.html - publisher dashboard for submitting content -->
+  <header>
+    <div class="brand">Pluralist AI</div>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/reader.html">Reader</a>
+      <a href="/admin.html">Admin</a>
+      <a href="#" id="signOutLink">Sign Out</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="publisher-panel">
+      <h1>Publisher Dashboard</h1>
+      <p>Upload audio/video content and submit articles for admin moderation.</p>
+    </section>
+
+    <section class="form-card">
+      <h2>Upload Media</h2>
+      <form id="mediaUploadForm">
+        <label for="mediaTitle">Title</label>
+        <input id="mediaTitle" name="title" type="text" required maxlength="120" />
+
+        <label for="mediaUrl">Media URL</label>
+        <input id="mediaUrl" name="url" type="url" required />
+
+        <label for="mediaType">Media Type</label>
+        <select id="mediaType" name="mediaType" required>
+          <option value="audio">Audio</option>
+          <option value="video">Video</option>
+        </select>
+
+        <label for="mediaDescription">Description</label>
+        <textarea id="mediaDescription" name="description" maxlength="300"></textarea>
+        <button type="submit">Upload for Review</button>
+      </form>
+    </section>
+
+    <section class="form-card">
+      <h2>Submit Article</h2>
+      <form id="publisherArticleForm">
+        <label for="articleTitle">Title</label>
+        <input id="articleTitle" name="title" type="text" required maxlength="150" />
+
+        <label for="articleContent">Content</label>
+        <textarea id="articleContent" name="content" required maxlength="3000"></textarea>
+
+        <button type="submit">Submit Article</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="chat-footer sticky-footer">
+    <div class="chat-box">
+      <div class="chat-header">Pluralist AI Chat</div>
+      <div class="chat-body" id="chatBody"></div>
+      <form id="chatForm" class="chat-form">
+        <input type="text" name="message" id="chatMessage" placeholder="Ask political or social issue questions only" required maxlength="300" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
