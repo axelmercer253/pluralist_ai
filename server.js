@@ -83,6 +83,8 @@ function createAuthToken(user) {
     {
       id: user.id,
       email: user.email,
+      username: user.username,
+      full_name: user.full_name,
       role: user.role,
       csrf: crypto.randomBytes(16).toString("hex")
     },
@@ -156,8 +158,8 @@ app.get("/api/csrf-token", (req, res) => {
 
 // Public route: sign up as reader or publisher. Admin signup requires ADMIN_SECRET.
 app.post("/api/auth/signup", async (req, res) => {
-  const { email, password, role, adminSecret } = req.body;
-  if (!email || !password || !role || !["reader", "publisher", "admin"].includes(role)) {
+  const { email, password, role, adminSecret, username, fullName } = req.body;
+  if (!email || !password || !role || !username || !fullName || !["reader", "publisher", "admin"].includes(role)) {
     return res.status(400).json({ error: "Invalid signup data" });
   }
 
@@ -167,8 +169,8 @@ app.post("/api/auth/signup", async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const result = await query(
-    "INSERT INTO users(email, password_hash, role) VALUES($1, $2, $3) RETURNING id, email, role",
-    [email.trim().toLowerCase(), hashedPassword, role]
+    "INSERT INTO users(email, username, full_name, password_hash, role) VALUES($1, $2, $3, $4, $5) RETURNING id, email, username, full_name, role",
+    [email.trim().toLowerCase(), username.trim(), fullName.trim(), hashedPassword, role]
   );
 
   const user = result.rows[0];
@@ -183,19 +185,19 @@ app.post("/api/auth/login", async (req, res) => {
     return res.status(400).json({ error: "Email and password are required" });
   }
 
-  const result = await query("SELECT id, email, password_hash, role FROM users WHERE email = $1", [email.trim().toLowerCase()]);
+  const result = await query("SELECT id, email, username, full_name, password_hash, role FROM users WHERE email = $1", [email.trim().toLowerCase()]);
   const user = result.rows[0];
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
   const authToken = createAuthToken(user);
-  return res.json({ token: authToken, csrfToken: createCsrfToken(), user: { id: user.id, email: user.email, role: user.role } });
+  return res.json({ token: authToken, csrfToken: createCsrfToken(), user: { id: user.id, email: user.email, username: user.username, fullName: user.full_name, role: user.role } });
 });
 
 // Authenticated route: return current user profile.
 app.get("/api/me", requireAuth, async (req, res) => {
-  res.json({ user: { id: req.user.id, email: req.user.email, role: req.user.role } });
+  res.json({ user: { id: req.user.id, email: req.user.email, username: req.user.username, fullName: req.user.full_name, role: req.user.role } });
 });
 
 // Public route: list published articles.
@@ -267,6 +269,7 @@ app.get("/api/admin/rss", requireAuth, requireRole("admin"), async (req, res) =>
     title: item.title,
     link: item.link,
     published: item.pubDate,
+    content: item.content || item.contentSnippet || item.title || "",
     description: item.contentSnippet || item.content || "",
     source: item.creator || "Google News"
   }));

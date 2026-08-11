@@ -3,10 +3,15 @@
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   email TEXT NOT NULL UNIQUE,
+  username TEXT NOT NULL UNIQUE,
+  full_name TEXT NOT NULL,
   password_hash TEXT NOT NULL,
   role TEXT NOT NULL CHECK (role IN ('reader', 'publisher', 'admin')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS username TEXT UNIQUE;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS full_name TEXT;
 
 CREATE TABLE IF NOT EXISTS articles (
   id SERIAL PRIMARY KEY,

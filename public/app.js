@@ -264,6 +264,16 @@ async function initAdminDashboard() {
   const analyzeButton = document.getElementById("analyzeButton");
   const pendingModeration = document.getElementById("pendingModeration");
   let selectedIssues = [];
+  let rssItems = [];
+
+  function populateSelectedItem(item) {
+    document.getElementById("issueTitle").value = item.title;
+    document.getElementById("issueSource").value = item.source || "Google News";
+    document.getElementById("issueContent").value = item.content || item.description || item.title;
+    selectedIssues = [];
+    aiIssues.innerHTML = "";
+    publishButton.disabled = true;
+  }
 
   async function loadRss() {
     const data = await apiFetch("/api/admin/rss", { method: "GET" });
@@ -272,29 +282,30 @@ async function initAdminDashboard() {
       return;
     }
 
+    rssItems = data.items;
+
     rssNewsList.innerHTML = data.items
       .map(
         (item, index) => `
           <div class="article-card">
             <h3>${item.title}</h3>
-            <p>${item.description || "No description"}</p>
+            <p>${item.content || item.description || "No article content available."}</p>
             <button type="button" data-index="${index}" class="selectRss">Select for review</button>
           </div>`
       )
       .join("");
 
     document.querySelectorAll(".selectRss").forEach((button) => {
-      button.addEventListener("click", async (event) => {
+      button.addEventListener("click", (event) => {
         const idx = parseInt(event.target.dataset.index, 10);
-        const item = data.items[idx];
-        document.getElementById("issueTitle").value = item.title;
-        document.getElementById("issueSource").value = item.source || "Google News";
-        document.getElementById("issueContent").value = item.description || item.title;
-        selectedIssues = [];
-        aiIssues.innerHTML = "";
-        publishButton.disabled = true;
+        const item = rssItems[idx];
+        populateSelectedItem(item);
       });
     });
+
+    if (rssItems.length > 0) {
+      populateSelectedItem(rssItems[0]);
+    }
   }
 
   async function loadModeration() {
@@ -436,6 +447,8 @@ async function initAuthForms() {
       const result = await apiFetch("/api/auth/signup", {
         method: "POST",
         body: JSON.stringify({
+          username: data.get("username"),
+          fullName: data.get("fullName"),
           email: data.get("email"),
           password: data.get("password"),
           role: data.get("role"),
