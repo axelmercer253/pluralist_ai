@@ -18,3 +18,5 @@
 16. Added database schema for users, articles, issues, votes, submissions, and media.
 17. Added environment configuration support through `.env` values like `DATABASE_URL`, `JWT_SECRET`, and `ADMIN_SECRET`.
 18. Added sample environment template file to document required configuration variables.
+19. Unified the footer AI chat styling across all HTML pages using the same NC-theme visual language as the main app.
+20. Standardized the chat footer markup structure across pages while preserving the shared JavaScript IDs and behavior.
