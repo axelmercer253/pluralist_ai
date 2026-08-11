@@ -4,60 +4,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Publisher Dashboard - Pluralist AI</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="nctheme.css" />
 </head>
 <body>
-  <!-- publisher.html - publisher dashboard for submitting content -->
-  <header>
-    <div class="brand">Pluralist AI</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/reader.html">Reader</a>
-      <a href="/admin.html">Admin</a>
-      <a href="#" id="signOutLink">Sign Out</a>
-    </nav>
-  </header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo"><div class="logo-icon">▣</div><span>Pluralist AI</span></div>
+      <nav class="nav">
+        <a class="nav-item" href="/"><span class="nav-icon">⌂</span><span>Home</span></a>
+        <a class="nav-item" href="/reader.html"><span class="nav-icon">⌁</span><span>Reader</span></a>
+        <a class="nav-item active" href="/publisher.html"><span class="nav-icon">▦</span><span>Publisher</span></a>
+        <a class="nav-item" href="/admin.html"><span class="nav-icon">⚙</span><span>Admin</span></a>
+        <a class="nav-item" href="#" id="signOutLink"><span class="nav-icon">↩</span><span>Sign Out</span></a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button"><span>☼</span><span>Light / Dark</span></button>
+    </aside>
 
-  <main>
-    <section class="publisher-panel">
-      <h1>Publisher Dashboard</h1>
-      <p>Upload audio/video content and submit articles for admin moderation.</p>
-    </section>
+    <main class="main">
+      <header class="topbar">
+        <div class="search"><input type="search" placeholder="Search stories..."><span class="search-icon">⌕</span></div>
+        <div class="topbar-spacer"></div>
+        <button class="notification" type="button">♧</button>
+        <div class="avatar">A</div>
+      </header>
 
-    <section class="form-card">
-      <h2>Upload Media</h2>
-      <form id="mediaUploadForm">
-        <label for="mediaTitle">Title</label>
-        <input id="mediaTitle" name="title" type="text" required maxlength="120" />
+      <div class="content">
+        <section class="publisher-panel">
+          <h1>Publisher Dashboard</h1>
+          <p>Upload audio/video content and submit articles for admin moderation.</p>
+        </section>
 
-        <label for="mediaUrl">Media URL</label>
-        <input id="mediaUrl" name="url" type="url" required />
+        <section class="form-card">
+          <h2>Upload Media</h2>
+          <form id="mediaUploadForm">
+            <label for="mediaTitle">Title</label>
+            <input id="mediaTitle" name="title" type="text" required maxlength="120" />
 
-        <label for="mediaType">Media Type</label>
-        <select id="mediaType" name="mediaType" required>
-          <option value="audio">Audio</option>
-          <option value="video">Video</option>
-        </select>
+            <label for="mediaUrl">Media URL</label>
+            <input id="mediaUrl" name="url" type="url" required />
 
-        <label for="mediaDescription">Description</label>
-        <textarea id="mediaDescription" name="description" maxlength="300"></textarea>
-        <button type="submit">Upload for Review</button>
-      </form>
-    </section>
+            <label for="mediaType">Media Type</label>
+            <select id="mediaType" name="mediaType" required>
+              <option value="audio">Audio</option>
+              <option value="video">Video</option>
+            </select>
 
-    <section class="form-card">
-      <h2>Submit Article</h2>
-      <form id="publisherArticleForm">
-        <label for="articleTitle">Title</label>
-        <input id="articleTitle" name="title" type="text" required maxlength="150" />
+            <label for="mediaDescription">Description</label>
+            <textarea id="mediaDescription" name="description" maxlength="300"></textarea>
+            <button type="submit">Upload for Review</button>
+          </form>
+        </section>
 
-        <label for="articleContent">Content</label>
-        <textarea id="articleContent" name="content" required maxlength="3000"></textarea>
+        <section class="form-card">
+          <h2>Submit Article</h2>
+          <form id="publisherArticleForm">
+            <label for="articleTitle">Title</label>
+            <input id="articleTitle" name="title" type="text" required maxlength="150" />
 
-        <button type="submit">Submit Article</button>
-      </form>
-    </section>
-  </main>
+            <label for="articleContent">Content</label>
+            <textarea id="articleContent" name="content" required maxlength="3000"></textarea>
+
+            <button type="submit">Submit Article</button>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
 
   <footer class="chat-footer sticky-footer">
     <div class="chat-box">
@@ -71,5 +83,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="nctheme.js"></script>
 </body>
 </html>

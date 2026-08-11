@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NewsWave</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --bg:#070d16;--sidebar:#101a29;--card:#111c2a;--card-hover:#162438;
+ --border:rgba(255,255,255,.08);--text:#f4f7fb;--muted:#8d9aae;
+ --blue:#2f7cff;--blue-dark:#1d5ddd;--radius:14px
+}
+html{scroll-behavior:smooth}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 70% -10%,rgba(47,124,255,.12),transparent 35%),var(--bg);color:var(--text);min-height:100vh;padding-bottom:58px}
+button,input{font:inherit}button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{width:245px;flex-shrink:0;background:linear-gradient(180deg,#111c2b,#0d1724);border-right:1px solid var(--border);padding:26px 18px;display:flex;flex-direction:column}
+.logo{display:flex;align-items:center;gap:11px;padding:0 12px;margin-bottom:42px;font-size:20px;font-weight:700;letter-spacing:-.4px}
+.logo-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:8px;background:linear-gradient(135deg,#3c8cff,#2163dd);box-shadow:0 7px 20px rgba(47,124,255,.25)}
+.nav{display:flex;flex-direction:column;gap:7px}
+.nav-item{border:0;background:transparent;color:#d4dbe6;padding:13px 14px;border-radius:9px;display:flex;align-items:center;gap:14px;text-align:left;transition:.2s ease}
+.nav-item:hover{background:rgba(255,255,255,.05);color:#fff}
+.nav-item.active{background:linear-gradient(135deg,#2858b8,#1c407f);color:#fff;box-shadow:0 8px 22px rgba(24,82,190,.18)}
+.nav-icon{width:20px;text-align:center;font-size:16px}
+.theme-toggle{margin-top:auto;border:1px solid var(--border);background:rgba(0,0,0,.18);color:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:center;gap:10px}
+.main{flex:1;min-width:0}
+.topbar{height:76px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:20px}
+.search{width:min(450px,100%);position:relative}
+.search input{width:100%;background:#101b2a;border:1px solid var(--border);border-radius:8px;padding:11px 42px 11px 15px;color:#fff;outline:none;transition:.2s}
+.search input:focus{border-color:rgba(47,124,255,.6);box-shadow:0 0 0 3px rgba(47,124,255,.08)}
+.search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.topbar-spacer{flex:1}.notification{border:0;background:transparent;color:#fff;font-size:20px}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#e9eef5,#9faebe);color:#1b2634;font-weight:700}
+.content{padding:22px}.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 345px;gap:22px}
+.categories{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;scrollbar-width:none}.categories::-webkit-scrollbar{display:none}
+.category{border:0;background:transparent;color:#c5ceda;padding:8px 13px;border-radius:7px;white-space:nowrap;transition:.2s}
+.category:hover{color:#fff;background:rgba(255,255,255,.05)}.category.active{background:var(--blue);color:#fff;box-shadow:0 5px 15px rgba(47,124,255,.22)}
+
+.hero{min-height:320px;border-radius:var(--radius);overflow:hidden;position:relative;display:flex;align-items:flex-end;background:linear-gradient(90deg,rgba(3,9,17,.97),rgba(3,9,17,.73) 42%,rgba(3,9,17,.08)),url("https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=1400&q=85") center/cover;border:1px solid var(--border);transition:background-image .35s ease}
+.hero-content{padding:30px;max-width:650px;position:relative;z-index:2}.hero-label{color:#4d9aff;font-size:13px;font-weight:600;margin-bottom:10px}.hero h1{font-size:clamp(27px,3vw,39px);line-height:1.05;letter-spacing:-1.3px;margin-bottom:13px}.hero p{color:#d0d7e0;max-width:560px;line-height:1.55;margin-bottom:18px}
+.primary-btn{border:0;color:#fff;background:linear-gradient(135deg,#3587ff,#2167df);padding:11px 17px;border-radius:7px;font-weight:600;box-shadow:0 7px 20px rgba(31,104,230,.3);transition:.2s}.primary-btn:hover{transform:translateY(-1px);box-shadow:0 10px 25px rgba(31,104,230,.4)}
+.hero-controls{position:absolute;right:22px;bottom:20px;z-index:3;display:flex;align-items:center;gap:8px}.hero-arrow{width:38px;height:38px;border:1px solid rgba(255,255,255,.16);border-radius:50%;background:rgba(7,13,22,.68);backdrop-filter:blur(8px);color:#fff;font-size:19px}.hero-arrow:hover{background:var(--blue)}.hero-dots{display:flex;gap:6px;margin-right:4px}.hero-dot{width:7px;height:7px;border:0;border-radius:50%;background:rgba(255,255,255,.45);padding:0}.hero-dot.active{background:#fff;width:20px;border-radius:8px}
+
+.section-title{margin:23px 0 14px;font-size:20px;letter-spacing:-.3px}
+.news-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.news-card{overflow:hidden;background:linear-gradient(180deg,#121e2d,#0e1825);border:1px solid var(--border);border-radius:11px;transition:.2s}
+.news-card:hover{transform:translateY(-4px);border-color:rgba(47,124,255,.35);background:var(--card-hover)}
+.news-image{height:130px;background-size:cover;background-position:center}.news-body{padding:13px}.meta{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:8px;gap:7px}.category-label{color:#4591ff;font-weight:600}.bookmark{border:0;background:transparent;color:#9aa8ba;font-size:15px}.news-card h3{font-size:13px;line-height:1.4;font-weight:600}
+.right-column{min-width:0}.panel{background:linear-gradient(180deg,#101b29,#0d1723);border:1px solid var(--border);border-radius:10px;padding:15px;margin-bottom:10px}.panel-title{font-size:16px;margin-bottom:14px}
+.trend{display:grid;grid-template-columns:25px 92px 1fr;gap:10px;align-items:center;padding:8px 0}.trend-number{color:#408aff;font-size:19px;font-weight:500}.trend-image{width:92px;height:60px;border-radius:8px;object-fit:cover}.trend-title{font-size:12px;line-height:1.35;font-weight:600}.trend-time{color:var(--muted);font-size:10px;margin-top:5px}
+.newsletter p{color:var(--muted);font-size:12px;line-height:1.5;margin-bottom:12px}.newsletter-form{display:flex;gap:8px}.newsletter-form input{min-width:0;flex:1;background:#111d2b;border:1px solid var(--border);color:#fff;padding:10px;border-radius:7px;outline:none}.newsletter-form button{border:0;background:var(--blue);color:#fff;border-radius:7px;padding:0 14px;font-size:12px;font-weight:600}
+.no-results{display:none;text-align:center;padding:45px 20px;color:var(--muted)}
+body.light{--bg:#f4f7fb;--sidebar:#fff;--card:#fff;--card-hover:#fff;--border:rgba(15,30,50,.10);--text:#172131;--muted:#68768a}
+body.light .sidebar,body.light .topbar{background:#fff}body.light .search input,body.light .newsletter-form input{background:#f4f7fb;color:#172131}body.light .panel,body.light .news-card{background:#fff}body.light .hero p{color:#dce4ee}
+
+/* Slim sticky AI chat */
+.ai-chat-bar{position:fixed;left:0;right:0;bottom:0;height:58px;z-index:1000;background:rgba(8,15,25,.94);border-top:1px solid rgba(255,255,255,.1);backdrop-filter:blur(18px);display:flex;align-items:center;padding:7px 18px;box-shadow:0 -10px 35px rgba(0,0,0,.25)}
+.ai-chat-inner{width:min(1100px,100%);margin:auto;display:flex;align-items:center;gap:10px}
+.ai-badge{width:35px;height:35px;flex:0 0 35px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#7b61ff,#2f7cff);box-shadow:0 5px 18px rgba(76,94,255,.25);font-size:17px}
+.ai-title{font-size:12px;font-weight:700;white-space:nowrap}.ai-status{font-size:10px;color:#7f8da0;white-space:nowrap}
+.ai-input{flex:1;min-width:0;height:38px;background:#101b2a;border:1px solid rgba(255,255,255,.09);border-radius:9px;color:#fff;padding:0 13px;outline:none}
+.ai-input:focus{border-color:rgba(47,124,255,.55)}.ai-send{height:38px;border:0;border-radius:9px;padding:0 16px;color:#fff;background:linear-gradient(135deg,#3587ff,#2167df);font-weight:600;font-size:12px}.ai-send:hover{filter:brightness(1.08)}
+.ai-response{font-size:11px;color:#b8c4d3;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:1150px){.content-grid{grid-template-columns:1fr}.right-column{display:grid;grid-template-columns:1fr 1fr;gap:14px}.panel{margin-bottom:0}.news-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:800px){.sidebar{width:72px;padding:20px 10px}.logo{justify-content:center;padding:0}.logo span{display:none}.nav-item{justify-content:center;padding:13px}.nav-item span:last-child{display:none}.theme-toggle span{display:none}.topbar{padding:0 15px}.content{padding:15px}.right-column{grid-template-columns:1fr}.ai-response{display:none}}
+@media(max-width:560px){.topbar{height:65px}.avatar,.notification{display:none}.hero{min-height:380px}.hero-content{padding:22px}.hero-controls{right:14px}.news-grid{grid-template-columns:1fr}.news-image{height:180px}.ai-chat-bar{padding:7px 10px}.ai-title,.ai-status{display:none}.ai-input{height:36px}.ai-send{height:36px;padding:0 13px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+    <div class="logo"><div class="logo-icon">▣</div><span>NewsWave</span></div>
+    <nav class="nav">
+        <button class="nav-item active"><span class="nav-icon">⌂</span><span>Home</span></button>
+        <button class="nav-item"><span class="nav-icon">⌁</span><span>Trending</span></button>
+        <button class="nav-item"><span class="nav-icon">▦</span><span>Categories</span></button>
+        <button class="nav-item"><span class="nav-icon">♡</span><span>Bookmarks</span></button>
+        <button class="nav-item"><span class="nav-icon">⚙</span><span>Settings</span></button>
+    </nav>
+    <button class="theme-toggle" id="themeToggle"><span>☼</span><span>Light / Dark</span></button>
+</aside>
+
+<main class="main">
+<header class="topbar">
+    <div class="search"><input id="searchInput" type="search" placeholder="Search for news..."><span class="search-icon">⌕</span></div>
+    <div class="topbar-spacer"></div>
+    <button class="notification">♧</button><div class="avatar">A</div>
+</header>
+
+<div class="content">
+<div class="content-grid">
+<section>
+    <div class="categories">
+        <button class="category active" data-category="all">All</button>
+        <button class="category" data-category="Business">Business</button>
+        <button class="category" data-category="Technology">Technology</button>
+        <button class="category" data-category="Sports">Sports</button>
+        <button class="category" data-category="Health">Health</button>
+        <button class="category" data-category="Entertainment">Entertainment</button>
+        <button class="category" data-category="Science">Science</button>
+    </div>
+
+    <article class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-label" id="heroLabel">TOP STORY</div>
+            <h1 id="heroTitle">Global Markets Rally Amid Economic Optimism</h1>
+            <p id="heroDescription">Stocks surged worldwide as inflation fears ease and tech giants report strong earnings.</p>
+            <button class="primary-btn" id="heroReadMore">Read More</button>
+        </div>
+        <div class="hero-controls">
+            <div class="hero-dots" id="heroDots"></div>
+            <button class="hero-arrow" id="heroNext" aria-label="Next story">→</button>
+        </div>
+    </article>
+
+    <h2 class="section-title">Latest News</h2>
+    <div class="news-grid" id="newsGrid">
+        <article class="news-card" data-category="Technology"><div class="news-image" style="background-image:url('https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=700&q=80')"></div><div class="news-body"><div class="meta"><span class="category-label">Technology</span><span>2h ago</span><button class="bookmark">♡</button></div><h3>AI Breakthrough: New Model Sets Benchmark</h3></div></article>
+        <article class="news-card" data-category="Sports"><div class="news-image" style="background-image:url('https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=700&q=80')"></div><div class="news-body"><div class="meta"><span class="category-label">Sports</span><span>3h ago</span><button class="bookmark">♡</button></div><h3>Champions League: Stunning Upsets in Quarterfinals</h3></div></article>
+        <article class="news-card" data-category="Health"><div class="news-image" style="background-image:url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=700&q=80')"></div><div class="news-body"><div class="meta"><span class="category-label">Health</span><span>4h ago</span><button class="bookmark">♡</button></div><h3>New Study Reveals Key to Longevity</h3></div></article>
+        <article class="news-card" data-category="Science"><div class="news-image" style="background-image:url('https://images.unsplash.com/photo-1517976547714-720226b864c1?auto=format&fit=crop&w=700&q=80')"></div><div class="news-body"><div class="meta"><span class="category-label">Science</span><span>5h ago</span><button class="bookmark">♡</button></div><h3>SpaceX Launches Next-Gen Starship Successfully</h3></div></article>
+    </div>
+    <div class="no-results" id="noResults">No stories found.</div>
+</section>
+
+<aside class="right-column">
+<div class="panel">
+    <h2 class="panel-title">Trending Now</h2>
+    <div class="trend"><div class="trend-number">1</div><img class="trend-image" src="https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=300&q=80"><div><div class="trend-title">Global Markets Rally Amid Economic Optimism</div><div class="trend-time">2h ago</div></div></div>
+    <div class="trend"><div class="trend-number">2</div><img class="trend-image" src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=300&q=80"><div><div class="trend-title">AI Breakthrough: New Model Sets Benchmark</div><div class="trend-time">3h ago</div></div></div>
+    <div class="trend"><div class="trend-number">3</div><img class="trend-image" src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=300&q=80"><div><div class="trend-title">Champions League: Stunning Upsets</div><div class="trend-time">4h ago</div></div></div>
+    <div class="trend"><div class="trend-number">4</div><img class="trend-image" src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=300&q=80"><div><div class="trend-title">New Study Reveals Key to Longevity</div><div class="trend-time">5h ago</div></div></div>
+    <div class="trend"><div class="trend-number">5</div><img class="trend-image" src="https://images.unsplash.com/photo-1517976547714-720226b864c1?auto=format&fit=crop&w=300&q=80"><div><div class="trend-title">SpaceX Launches Next-Gen Starship</div><div class="trend-time">6h ago</div></div></div>
+</div>
+<div class="panel newsletter">
+    <h2 class="panel-title">Subscribe to Newsletter</h2>
+    <p>Get the latest news delivered straight to your inbox.</p>
+    <form class="newsletter-form" id="newsletterForm"><input type="email" placeholder="Enter your email" required><button type="submit">Subscribe</button></form>
+</div>
+</aside>
+</div>
+</div>
+</main>
+</div>
+
+<!-- Slim sticky AI chat footer -->
+<div class="ai-chat-bar">
+    <div class="ai-chat-inner">
+        <div class="ai-badge">✦</div>
+        <div>
+            <div class="ai-title">News AI</div>
+            <div class="ai-status">Ask about today's stories</div>
+        </div>
+        <input class="ai-input" id="aiInput" type="text" placeholder="Ask AI about the news...">
+        <div class="ai-response" id="aiResponse"></div>
+        <button class="ai-send" id="aiSend">Ask AI</button>
+    </div>
+</div>
+
+<script>
+const heroStories=[
+ {title:"Global Markets Rally Amid Economic Optimism",label:"TOP STORY",description:"Stocks surged worldwide as inflation fears ease and tech giants report strong earnings.",image:"https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=1400&q=85"},
+ {title:"AI Breakthrough: New Model Sets Benchmark",label:"TECHNOLOGY",description:"A new generation of AI models is pushing performance benchmarks across research and enterprise applications.",image:"https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1400&q=85"},
+ {title:"Champions League Delivers Stunning Upsets",label:"SPORTS",description:"Unexpected results have reshaped the tournament and set up a dramatic next round.",image:"https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=1400&q=85"}
+];
+let heroIndex=0;
+const hero=document.getElementById("hero");
+const heroTitle=document.getElementById("heroTitle");
+const heroLabel=document.getElementById("heroLabel");
+const heroDescription=document.getElementById("heroDescription");
+const heroReadMore=document.getElementById("heroReadMore");
+const heroDots=document.getElementById("heroDots");
+
+function renderHeroDots(){
+ heroDots.innerHTML="";
+ heroStories.forEach((_,i)=>{
+  const dot=document.createElement("button");
+  dot.className="hero-dot"+(i===heroIndex?" active":"");
+  dot.setAttribute("aria-label","Show story "+(i+1));
+  dot.addEventListener("click",()=>{heroIndex=i;renderHero()});
+  heroDots.appendChild(dot);
+ });
+}
+function renderHero(){
+ const story=heroStories[heroIndex];
+ heroTitle.textContent=story.title;
+ heroLabel.textContent=story.label;
+ heroDescription.textContent=story.description;
+ hero.style.backgroundImage=`linear-gradient(90deg,rgba(3,9,17,.97),rgba(3,9,17,.73) 42%,rgba(3,9,17,.08)),url("${story.image}")`;
+ renderHeroDots();
+}
+document.getElementById("heroNext").addEventListener("click",()=>{
+ heroIndex=(heroIndex+1)%heroStories.length;
+ renderHero();
+});
+heroReadMore.addEventListener("click",()=>{
+ alert("Opening story: "+heroStories[heroIndex].title);
+});
+renderHero();
+
+document.querySelectorAll(".category").forEach(button=>{
+ button.addEventListener("click",()=>{
+  document.querySelectorAll(".category").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+  const category=button.dataset.category;
+  document.querySelectorAll(".news-card").forEach(card=>{
+   card.style.display=(category==="all"||card.dataset.category===category)?"":"none";
+  });
+ });
+});
+
+const searchInput=document.getElementById("searchInput");
+const noResults=document.getElementById("noResults");
+searchInput.addEventListener("input",()=>{
+ const query=searchInput.value.trim().toLowerCase();
+ let visible=0;
+ document.querySelectorAll(".news-card").forEach(card=>{
+  const match=query===""||card.textContent.toLowerCase().includes(query);
+  card.style.display=match?"":"none";
+  if(match) visible++;
+ });
+ noResults.style.display=visible===0?"block":"none";
+});
+
+document.querySelectorAll(".bookmark").forEach(button=>{
+ button.addEventListener("click",e=>{
+  e.stopPropagation();
+  button.textContent=button.textContent==="♡"?"♥":"♡";
+ });
+});
+
+document.querySelectorAll(".nav-item").forEach(item=>{
+ item.addEventListener("click",()=>{
+  document.querySelectorAll(".nav-item").forEach(nav=>nav.classList.remove("active"));
+  item.classList.add("active");
+ });
+});
+
+document.getElementById("themeToggle").addEventListener("click",()=>{
+ document.body.classList.toggle("light");
+});
+
+document.getElementById("newsletterForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const email=e.target.querySelector("input").value;
+ alert(`Thanks! ${email} has been subscribed.`);
+ e.target.reset();
+});
+
+const aiInput=document.getElementById("aiInput");
+const aiResponse=document.getElementById("aiResponse");
+function askAI(){
+ const question=aiInput.value.trim();
+ if(!question)return;
+ aiResponse.textContent="AI ready: "+question;
+ aiInput.value="";
+}
+document.getElementById("aiSend").addEventListener("click",askAI);
+aiInput.addEventListener("keydown",e=>{if(e.key==="Enter")askAI();});
+</script>
+</body>
+</html>

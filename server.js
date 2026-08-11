@@ -1,19 +1,20 @@
 // server.js - main backend server for Pluralist AI
 // This server is stateless: it authenticates users with JWT auth tokens and validates CSRF tokens with signed headers.
 const path = require("path");
+const fs = require("fs");
 const express = require("express");
-const { Pool } = require("pg");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const Parser = require("rss-parser");
 const rateLimit = require("express-rate-limit");
 const crypto = require("crypto");
+const db = require("./db");
 
 dotenv.config();
 
 // Load environment values from .env
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 const DATABASE_URL = process.env.DATABASE_URL;
 const JWT_SECRET = process.env.JWT_SECRET || "pluralist-secret";
 const OPEN_ROUTER_BASE_URL = process.env.OPEN_ROUTER_BASE_URL || "https://api.openrouter.ai/v1/chat/completions";
@@ -27,11 +28,6 @@ if (!DATABASE_URL) {
   console.error("DATABASE_URL is required in .env");
   process.exit(1);
 }
-
-const pool = new Pool({
-  connectionString: DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
-});
 
 const app = express();
 const parser = new Parser();
@@ -58,12 +54,18 @@ const chatLimiter = rateLimit({
 
 // Helper: execute SQL and return result rows.
 async function query(sql, params = []) {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(sql, params);
-    return result;
-  } finally {
-    client.release();
+  return db.query(sql, params);
+}
+
+async function ensureSchema() {
+  const schemaSql = fs.readFileSync(path.join(__dirname, "schema.sql"), "utf8");
+  const statements = schemaSql
+    .split(/;\s*\n/)
+    .map((stmt) => stmt.trim())
+    .filter(Boolean);
+
+  for (const statement of statements) {
+    await query(statement);
   }
 }
 
@@ -411,11 +413,35 @@ app.post("/api/chat", chatLimiter, requireAuth, async (req, res) => {
   res.json({ response: output });
 });
 
-// Default route: serve index for all other pages.
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", req.path));
+// Default routes: serve the homepage and static HTML pages correctly.
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`Pluralist AI server is running on http://localhost:${PORT}`);
+app.get(["/index.html", "/auth.html", "/reader.html", "/publisher.html", "/admin.html", "/article.html"], (req, res) => {
+  const page = req.path === "/" ? "index.html" : req.path.replace(/^\/+/, "");
+  res.sendFile(path.join(__dirname, "public", page));
 });
+
+app.get("/*", (req, res) => {
+  const requestedPath = req.path === "/" ? "index.html" : req.path.replace(/^\/+/, "");
+  const filePath = path.join(__dirname, "public", requestedPath);
+
+  if (fs.existsSync(filePath) && !fs.statSync(filePath).isDirectory()) {
+    return res.sendFile(filePath);
+  }
+
+  return res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+(async () => {
+  try {
+    await ensureSchema();
+    app.listen(PORT, () => {
+      console.log(`Pluralist AI server is running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to initialize database schema:", error);
+    process.exit(1);
+  }
+})();

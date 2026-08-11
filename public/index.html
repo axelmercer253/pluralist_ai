@@ -4,41 +4,57 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pluralist AI</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="nctheme.css" />
 </head>
 <body>
-  <!-- index.html - non-signed-in home page for Pluralist AI -->
-  <header>
-    <div class="brand">Pluralist AI</div>
-    <nav>
-      <a href="/auth.html">Sign In / Sign Up</a>
-      <a href="/reader.html">Reader Home</a>
-      <a href="/publisher.html">Publisher</a>
-      <a href="/admin.html">Admin</a>
-    </nav>
-  </header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo"><div class="logo-icon">▣</div><span>Pluralist AI</span></div>
+      <nav class="nav">
+        <a class="nav-item active" href="/"><span class="nav-icon">⌂</span><span>Home</span></a>
+        <a class="nav-item" href="/auth.html"><span class="nav-icon">◌</span><span>Sign In</span></a>
+        <a class="nav-item" href="/reader.html"><span class="nav-icon">⌁</span><span>Reader</span></a>
+        <a class="nav-item" href="/publisher.html"><span class="nav-icon">▦</span><span>Publisher</span></a>
+        <a class="nav-item" href="/admin.html"><span class="nav-icon">⚙</span><span>Admin</span></a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button"><span>☼</span><span>Light / Dark</span></button>
+    </aside>
 
-  <main>
-    <section class="hero">
-      <h1>Pluralist AI News</h1>
-      <p>Read social and political issues, vote on article issues, and use the AI chat in the sticky footer.</p>
-    </section>
+    <main class="main">
+      <header class="topbar">
+        <div class="search"><input type="search" placeholder="Search stories..."><span class="search-icon">⌕</span></div>
+        <div class="topbar-spacer"></div>
+        <button class="notification" type="button">♧</button>
+        <div class="avatar">A</div>
+      </header>
 
-    <section class="cards">
-      <article>
-        <h2>Read Articles</h2>
-        <p>Please sign in or sign up to vote and access reader content.</p>
-      </article>
-      <article>
-        <h2>Publisher Dashboard</h2>
-        <p>Publish articles, audio, and video content for admin review.</p>
-      </article>
-      <article>
-        <h2>Admin Review</h2>
-        <p>Admin moderates news, approves issues, and publishes articles.</p>
-      </article>
-    </section>
-  </main>
+      <div class="content">
+        <section class="hero">
+          <div class="hero-content">
+            <div class="hero-label">TOP STORY</div>
+            <h1>Pluralist AI News</h1>
+            <p>Read social and political issues, vote on article issues, and use the AI chat in the sticky footer.</p>
+            <a class="primary-btn" href="/auth.html">Get Started</a>
+          </div>
+        </section>
+
+        <section class="cards">
+          <article>
+            <h2>Read Articles</h2>
+            <p>Please sign in or sign up to vote and access reader content.</p>
+          </article>
+          <article>
+            <h2>Publisher Dashboard</h2>
+            <p>Publish articles, audio, and video content for admin review.</p>
+          </article>
+          <article>
+            <h2>Admin Review</h2>
+            <p>Admin moderates news, approves issues, and publishes articles.</p>
+          </article>
+        </section>
+      </div>
+    </main>
+  </div>
 
   <footer class="chat-footer sticky-footer">
     <div class="chat-box">
@@ -52,5 +68,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="nctheme.js"></script>
 </body>
 </html>

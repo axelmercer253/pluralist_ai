@@ -4,24 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Article Detail - Pluralist AI</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="nctheme.css" />
 </head>
 <body>
-  <!-- article.html - article detail page with vote buttons -->
-  <header>
-    <div class="brand">Pluralist AI</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/reader.html">Reader</a>
-      <a href="/publisher.html">Publisher</a>
-      <a href="/admin.html">Admin</a>
-      <a href="#" id="signOutLink">Sign Out</a>
-    </nav>
-  </header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo"><div class="logo-icon">▣</div><span>Pluralist AI</span></div>
+      <nav class="nav">
+        <a class="nav-item" href="/"><span class="nav-icon">⌂</span><span>Home</span></a>
+        <a class="nav-item active" href="/reader.html"><span class="nav-icon">⌁</span><span>Reader</span></a>
+        <a class="nav-item" href="/publisher.html"><span class="nav-icon">▦</span><span>Publisher</span></a>
+        <a class="nav-item" href="/admin.html"><span class="nav-icon">⚙</span><span>Admin</span></a>
+        <a class="nav-item" href="#" id="signOutLink"><span class="nav-icon">↩</span><span>Sign Out</span></a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button"><span>☼</span><span>Light / Dark</span></button>
+    </aside>
 
-  <main>
-    <section class="article-list" id="articleList"></section>
-  </main>
+    <main class="main">
+      <header class="topbar">
+        <div class="search"><input type="search" placeholder="Search stories..."><span class="search-icon">⌕</span></div>
+        <div class="topbar-spacer"></div>
+        <button class="notification" type="button">♧</button>
+        <div class="avatar">A</div>
+      </header>
+
+      <div class="content">
+        <section class="article-list" id="articleList"></section>
+      </div>
+    </main>
+  </div>
 
   <footer class="chat-footer sticky-footer">
     <div class="chat-box">
@@ -35,5 +46,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="nctheme.js"></script>
 </body>
 </html>

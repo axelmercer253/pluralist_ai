@@ -4,55 +4,67 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard - Pluralist AI</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="nctheme.css" />
 </head>
 <body>
-  <!-- admin.html - admin dashboard with RSS fetch and moderation -->
-  <header>
-    <div class="brand">Pluralist AI</div>
-    <nav>
-      <a href="/">Home</a>
-      <a href="/reader.html">Reader</a>
-      <a href="/publisher.html">Publisher</a>
-      <a href="#" id="signOutLink">Sign Out</a>
-    </nav>
-  </header>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="logo"><div class="logo-icon">▣</div><span>Pluralist AI</span></div>
+      <nav class="nav">
+        <a class="nav-item" href="/"><span class="nav-icon">⌂</span><span>Home</span></a>
+        <a class="nav-item" href="/reader.html"><span class="nav-icon">⌁</span><span>Reader</span></a>
+        <a class="nav-item" href="/publisher.html"><span class="nav-icon">▦</span><span>Publisher</span></a>
+        <a class="nav-item active" href="/admin.html"><span class="nav-icon">⚙</span><span>Admin</span></a>
+        <a class="nav-item" href="#" id="signOutLink"><span class="nav-icon">↩</span><span>Sign Out</span></a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button"><span>☼</span><span>Light / Dark</span></button>
+    </aside>
 
-  <main>
-    <section class="admin-panel">
-      <h1>Admin Dashboard</h1>
-      <p>Review RSS news, select issue topics, and publish articles to readers.</p>
-    </section>
+    <main class="main">
+      <header class="topbar">
+        <div class="search"><input type="search" placeholder="Search stories..."><span class="search-icon">⌕</span></div>
+        <div class="topbar-spacer"></div>
+        <button class="notification" type="button">♧</button>
+        <div class="avatar">A</div>
+      </header>
 
-    <section class="form-card" id="rssNewsSection">
-      <h2>Google RSS News</h2>
-      <div id="rssNewsList"></div>
-    </section>
+      <div class="content">
+        <section class="admin-panel">
+          <h1>Admin Dashboard</h1>
+          <p>Review RSS news, select issue topics, and publish articles to readers.</p>
+        </section>
 
-    <section class="form-card" id="issueReviewSection">
-      <h2>Issue Review</h2>
-      <form id="issueReviewForm">
-        <label for="issueTitle">News Title</label>
-        <input id="issueTitle" name="title" readonly />
+        <section class="form-card" id="rssNewsSection">
+          <h2>Google RSS News</h2>
+          <div id="rssNewsList"></div>
+        </section>
 
-        <label for="issueSource">Source</label>
-        <input id="issueSource" name="source" readonly />
+        <section class="form-card" id="issueReviewSection">
+          <h2>Issue Review</h2>
+          <form id="issueReviewForm">
+            <label for="issueTitle">News Title</label>
+            <input id="issueTitle" name="title" readonly />
 
-        <label for="issueContent">Article Text</label>
-        <textarea id="issueContent" name="content" readonly maxlength="3000"></textarea>
+            <label for="issueSource">Source</label>
+            <input id="issueSource" name="source" readonly />
 
-        <button id="analyzeButton" type="button">Analyze Issues</button>
-        <div id="aiIssues"></div>
+            <label for="issueContent">Article Text</label>
+            <textarea id="issueContent" name="content" readonly maxlength="3000"></textarea>
 
-        <button id="publishButton" type="submit" disabled>Publish Article</button>
-      </form>
-    </section>
+            <button id="analyzeButton" type="button">Analyze Issues</button>
+            <div id="aiIssues"></div>
 
-    <section class="form-card" id="moderationSection">
-      <h2>Pending Moderation</h2>
-      <div id="pendingModeration"></div>
-    </section>
-  </main>
+            <button id="publishButton" type="submit" disabled>Publish Article</button>
+          </form>
+        </section>
+
+        <section class="form-card" id="moderationSection">
+          <h2>Pending Moderation</h2>
+          <div id="pendingModeration"></div>
+        </section>
+      </div>
+    </main>
+  </div>
 
   <footer class="chat-footer sticky-footer">
     <div class="chat-box">
@@ -66,5 +78,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="nctheme.js"></script>
 </body>
 </html>
