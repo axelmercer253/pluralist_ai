@@ -146,53 +146,6 @@ button:disabled {
   min-width: 120px;
 }
 
-.chat-footer {
-  background: #111827;
-  color: white;
-  padding: 16px;
-}
-
-.sticky-footer {
-  position: sticky;
-  bottom: 0;
-  width: 100%;
-  z-index: 50;
-}
-
-.chat-box {
-  max-width: 960px;
-  margin: auto;
-}
-
-.chat-header {
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.chat-body {
-  min-height: 120px;
-  max-height: 280px;
-  overflow-y: auto;
-  background: #1f2937;
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 12px;
-}
-
-.chat-form {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-}
-
-.chat-form input {
-  background: white;
-  color: #111827;
-}
-
-.chat-form button {
-  background: #10b981;
-}
 
 .card-row {
   display: grid;

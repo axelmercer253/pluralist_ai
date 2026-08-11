@@ -20,6 +20,33 @@ async function apiFetch(url, options = {}) {
   return response.json();
 }
 
+async function setupAIChat() {
+  const aiInput = document.getElementById("aiInput");
+  const aiResponse = document.getElementById("aiResponse");
+  const aiSend = document.getElementById("aiSend");
+  if (!aiInput || !aiResponse || !aiSend) return;
+
+  async function askAI() {
+    const question = aiInput.value.trim();
+    if (!question) return;
+    aiResponse.textContent = "Thinking...";
+
+    const response = await apiFetch("/api/chat", {
+      method: "POST",
+      body: JSON.stringify({ message: question }),
+      csrfToken: await getCsrfToken()
+    });
+
+    aiResponse.textContent = response.response || response.error || "Unable to get AI response.";
+    aiInput.value = "";
+  }
+
+  aiSend.addEventListener("click", askAI);
+  aiInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") askAI();
+  });
+}
+
 async function getCsrfToken() {
   const data = await apiFetch("/api/csrf-token", { method: "GET" });
   return data.csrfToken;
@@ -37,7 +64,38 @@ function getCurrentPath() {
   return window.location.pathname;
 }
 
+function getRoleHome(role) {
+  if (role === "admin") return "/admin.html";
+  if (role === "publisher") return "/publisher.html";
+  return "/reader.html";
+}
+
+async function getCurrentUser() {
+  if (!localStorage.getItem("pluralistAuthToken")) return null;
+  const result = await apiFetch("/api/me", { method: "GET" });
+  return result.user || null;
+}
+
+async function ensurePageRole(requiredRole) {
+  if (!requiredRole) return true;
+  const user = await getCurrentUser();
+  if (!user) {
+    window.location.href = "/auth.html";
+    return false;
+  }
+  if (user.role !== requiredRole) {
+    window.location.href = getRoleHome(user.role);
+    return false;
+  }
+  return true;
+}
+
 async function loadArticles() {
+  if (getCurrentPath() === "/reader.html") {
+    const allowed = await ensurePageRole("reader");
+    if (!allowed) return;
+  }
+
   const articleList = document.getElementById("articleList");
   if (!articleList) return;
   const result = await apiFetch("/api/articles", { method: "GET" });
@@ -82,30 +140,7 @@ function initSignOut() {
   }
 }
 
-async function setupChat() {
-  const chatForm = document.getElementById("chatForm");
-  const chatBody = document.getElementById("chatBody");
-  if (!chatForm || !chatBody) return;
-
-  chatForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const messageInput = document.getElementById("chatMessage");
-    const message = messageInput.value.trim();
-    if (!message) return;
-
-    chatBody.innerHTML += `<div class="chat-entry"><strong>You:</strong> ${message}</div>`;
-    messageInput.value = "";
-
-    const data = await apiFetch("/api/chat", {
-      method: "POST",
-      body: JSON.stringify({ message }),
-      csrfToken: await getCsrfToken()
-    });
-
-    chatBody.innerHTML += `<div class="chat-entry"><strong>AI:</strong> ${data.response || data.error}</div>`;
-    chatBody.scrollTop = chatBody.scrollHeight;
-  });
-}
+// legacy chat form removed; slim AI chat handled by setupAIChat()
 
 async function loadArticleDetail() {
   if (getCurrentPath() !== "/article.html") return;
@@ -164,6 +199,8 @@ async function loadArticleDetail() {
 
 async function initPublisherForms() {
   if (getCurrentPath() !== "/publisher.html") return;
+  const allowed = await ensurePageRole("publisher");
+  if (!allowed) return;
 
   const mediaUploadForm = document.getElementById("mediaUploadForm");
   const publisherArticleForm = document.getElementById("publisherArticleForm");
@@ -217,6 +254,8 @@ async function initPublisherForms() {
 
 async function initAdminDashboard() {
   if (getCurrentPath() !== "/admin.html") return;
+  const allowed = await ensurePageRole("admin");
+  if (!allowed) return;
 
   const rssNewsList = document.getElementById("rssNewsList");
   const issueReviewForm = document.getElementById("issueReviewForm");
@@ -406,7 +445,8 @@ async function initAuthForms() {
       });
       if (result.token) {
         setAuthToken(result.token);
-        window.location.href = "/reader.html";
+        const role = result.user?.role;
+        window.location.href = getRoleHome(role);
       } else {
         alert(result.error || "Signup failed.");
       }
@@ -427,7 +467,8 @@ async function initAuthForms() {
       });
       if (result.token) {
         setAuthToken(result.token);
-        window.location.href = "/reader.html";
+        const role = result.user?.role;
+        window.location.href = getRoleHome(role);
       } else {
         alert(result.error || "Login failed.");
       }
@@ -437,7 +478,7 @@ async function initAuthForms() {
 
 function initPage() {
   initSignOut();
-  setupChat();
+  setupAIChat();
   loadArticles();
   loadArticleDetail();
   initPublisherForms();

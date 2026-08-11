@@ -16,17 +16,25 @@ dotenv.config();
 // Load environment values from .env
 const PORT = process.env.PORT || 3003;
 const DATABASE_URL = process.env.DATABASE_URL;
-const JWT_SECRET = process.env.JWT_SECRET || "pluralist-secret";
+const JWT_SECRET = process.env.JWT_SECRET;
 const OPEN_ROUTER_BASE_URL = process.env.OPEN_ROUTER_BASE_URL || "https://api.openrouter.ai/v1/chat/completions";
 const OPEN_ROUTER_CHAT_KEY = process.env.OPEN_ROUTER_CHAT_KEY || "";
 const OPEN_ROUTER_ISSUE_KEY1 = process.env.OPEN_ROUTER_ISSUE_KEY1 || "";
 const OPEN_ROUTER_ISSUE_KEY2 = process.env.OPEN_ROUTER_ISSUE_KEY2 || "";
 const OPEN_ROUTER_ISSUE_KEY3 = process.env.OPEN_ROUTER_ISSUE_KEY3 || "";
-const ADMIN_SECRET = process.env.ADMIN_SECRET || "admin-secret";
+const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
-if (!DATABASE_URL) {
-  console.error("DATABASE_URL is required in .env");
+if (!DATABASE_URL || !JWT_SECRET || !ADMIN_SECRET) {
+  console.error("DATABASE_URL, JWT_SECRET, and ADMIN_SECRET are required in .env");
   process.exit(1);
+}
+
+if (!OPEN_ROUTER_CHAT_KEY) {
+  console.warn("Warning: OPEN_ROUTER_CHAT_KEY is not configured. AI chat requests will fail until it is set.");
+}
+
+if (![OPEN_ROUTER_ISSUE_KEY1, OPEN_ROUTER_ISSUE_KEY2, OPEN_ROUTER_ISSUE_KEY3].some(Boolean)) {
+  console.warn("Warning: One or more OPEN_ROUTER_ISSUE_KEYs are not configured. Admin issue extraction will fail until they are set.");
 }
 
 const app = express();

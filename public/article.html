@@ -34,16 +34,19 @@
     </main>
   </div>
 
-  <footer class="chat-footer sticky-footer">
-    <div class="chat-box">
-      <div class="chat-header">Pluralist AI Chat</div>
-      <div class="chat-body" id="chatBody" aria-live="polite"></div>
-      <form id="chatForm" class="chat-form">
-        <input type="text" name="message" id="chatMessage" placeholder="Ask political or social issue questions only" required maxlength="300" />
-        <button type="submit">Send</button>
-      </form>
+  <!-- Slim sticky AI chat (from news_template) -->
+  <div class="ai-chat-bar">
+    <div class="ai-chat-inner">
+      <div class="ai-badge">✦</div>
+      <div>
+        <div class="ai-title">News AI</div>
+        <div class="ai-status">Ask about today's stories</div>
+      </div>
+      <input class="ai-input" id="aiInput" type="text" placeholder="Ask AI about the news...">
+      <div class="ai-response" id="aiResponse"></div>
+      <button class="ai-send" id="aiSend">Ask AI</button>
     </div>
-  </footer>
+  </div>
 
   <script src="app.js"></script>
   <script src="nctheme.js"></script>
