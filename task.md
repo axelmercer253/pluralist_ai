@@ -76,3 +76,23 @@ Review the app against the README and fix the missing or incorrect logic so the 
 - All role-based endpoints enforce permissions correctly
 - App starts successfully with a valid `.env`
 - Main described flows work end-to-end
+
+## Reference documentation
+- See `test.md` for a function-level reference and ELI5 descriptions of helpers used in the code.
+
+## Additional implemented helpers not explicitly named in task.md
+- Backend auth and security helpers:
+  - `createAuthToken()`: issues JWT auth tokens with user identity and CSRF claims.
+  - `createCsrfToken()`: generates one-time CSRF tokens for secure POST requests.
+  - `validateCsrf()`: enforces CSRF protection for non-GET API calls.
+  - `ensureSchema()`: initializes the database schema from `schema.sql` on startup.
+- Frontend utility functions and page initialization:
+  - `apiFetch()`: centralized fetch wrapper that adds auth and CSRF headers.
+  - `setupAIChat()`: sticky footer AI chat UI integration available on app pages.
+  - `getCsrfToken()`: retrieves a fresh CSRF token from the backend.
+  - `ensurePageRole()`: validates the current user role and redirects to the correct dashboard.
+  - `loadArticles()`: loads the public article list and attaches navigation actions.
+  - `loadArticleDetail()`: renders an article detail page including issue voting controls.
+  - `initPublisherForms()`, `initAdminDashboard()`, `initAuthForms()`: initialize role-specific page behaviors.
+  - `loadArticles()` and `loadArticleDetail()`: render article listings and article issue pages.
+  - `initPublisherForms()`, `initAdminDashboard()`, and `initAuthForms()`: initialize role-specific client-side behavior.
