@@ -8,15 +8,14 @@
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar">
+      <aside class="sidebar">
       <div class="logo"><div class="logo-icon">▣</div><span>Pluralist AI</span></div>
       <nav class="nav">
         <a class="nav-item active" href="/"><span class="nav-icon">⌂</span><span>Home</span></a>
-        <a class="nav-item" href="/login.html"><span class="nav-icon">◌</span><span>Sign In</span></a>
-        <a class="nav-item" href="/signup.html"><span class="nav-icon">✚</span><span>Sign Up</span></a>
         <a class="nav-item" href="/reader.html"><span class="nav-icon">⌁</span><span>Reader</span></a>
         <a class="nav-item" href="/publisher.html"><span class="nav-icon">▦</span><span>Publisher</span></a>
         <a class="nav-item" href="/admin.html"><span class="nav-icon">⚙</span><span>Admin</span></a>
+        <a class="nav-item" href="#" id="signOutLink"><span class="nav-icon">↩</span><span>Sign Out</span></a>
       </nav>
       <button class="theme-toggle" id="themeToggle" type="button"><span>☼</span><span>Light / Dark</span></button>
     </aside>
@@ -70,6 +69,20 @@
       <button class="ai-send" id="aiSend">Ask AI</button>
     </div>
   </div>
+
+  <footer class="site-footer" style="padding:1rem; text-align:center; background:#f7f7f7; border-top:1px solid #e6e6e6;">
+    <div style="max-width:920px; margin:0 auto;">
+      <strong>Sign In</strong>
+      <a href="/login_reader.html" style="margin:0 0.5rem;">Reader</a>
+      <a href="/login_publisher.html" style="margin:0 0.5rem;">Publisher</a>
+      <a href="/login_admin.html" style="margin:0 0.5rem;">Admin</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <strong>Sign Up</strong>
+      <a href="/signup_reader.html" style="margin:0 0.5rem;">Reader</a>
+      <a href="/signup_publisher.html" style="margin:0 0.5rem;">Publisher</a>
+      <a href="/signup_admin.html" style="margin:0 0.5rem;">Admin</a>
+    </div>
+  </footer>
 
   <script src="app.js"></script>
   <script src="nctheme.js"></script>
