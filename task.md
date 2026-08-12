@@ -3,22 +3,18 @@
 ## Goal
 Review the app against the README and fix the missing or incorrect logic so the app matches the intended product behavior.
 
-## Findings from code review
-
-### ✅ Implemented
-- JWT-based stateless auth for users
+Status: Completed — `public/app.js` now enforces role-aware redirects and checks `document.body.dataset.requiredRole` on role-specific login pages.
 - Three roles: reader, publisher, admin
 - Reader article list and article detail pages
-- Issue voting for readers
-- Admin RSS fetching from Google News
+Status: Improved — server-side route handling in `server.js` was updated to serve role-specific login pages and to enforce role checks when an Authorization header is present. A friendly `public/403.html` is served for role-mismatch cases.
 - OpenRouter-based AI issue extraction
 - Admin article publishing with exactly 3 selected issues
-- Publisher article submission and media upload flows
+Status: Partially completed — client-side moderation routing bug fixed; approve/reject actions are routed to correct endpoints. Recommend end-to-end verification.
 - Admin moderation queue for submissions and media
 - AI chat endpoint and client-side chat UI
-
-### ⚠️ Issues to fix
-1. Role-based redirect after login/signup is incorrect
+   - `setDefaultLightTheme()`: ensures the site loads in a light/white theme by default.
+   - New static pages: role-specific login/signup pages were added under `public/` and navigation links were updated.
+   - `403.html`: friendly forbidden page served when role mismatches occur.
    - Current client logic sends all users to /reader.html after auth
    - Admin and publisher users should be redirected to their own pages based on role
 
@@ -96,3 +92,19 @@ Review the app against the README and fix the missing or incorrect logic so the 
   - `initPublisherForms()`, `initAdminDashboard()`, `initAuthForms()`: initialize role-specific page behaviors.
   - `loadArticles()` and `loadArticleDetail()`: render article listings and article issue pages.
   - `initPublisherForms()`, `initAdminDashboard()`, and `initAuthForms()`: initialize role-specific client-side behavior.
+
+## References
+
+- [public/app.js](public/app.js)
+- [public/nctheme.js](public/nctheme.js)
+- [public/index.html](public/index.html)
+- [public/login.html](public/login.html)
+- [public/signup.html](public/signup.html)
+- [public/login_reader.html](public/login_reader.html)
+- [public/login_publisher.html](public/login_publisher.html)
+- [public/login_admin.html](public/login_admin.html)
+- [public/signup_reader.html](public/signup_reader.html)
+- [public/signup_publisher.html](public/signup_publisher.html)
+- [public/signup_admin.html](public/signup_admin.html)
+- [public/403.html](public/403.html)
+- [server.js](server.js)

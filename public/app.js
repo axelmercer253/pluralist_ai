@@ -5,19 +5,32 @@ const authToken = localStorage.getItem("pluralistAuthToken");
 
 async function apiFetch(url, options = {}) {
   const headers = options.headers || {};
-  headers["Content-Type"] = "application/json";
+  // Only set JSON content type when body is present and not FormData
+  if (options.body && !(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
   if (localStorage.getItem("pluralistAuthToken")) {
     headers["Authorization"] = `Bearer ${localStorage.getItem("pluralistAuthToken")}`;
   }
   if (options.csrfToken) {
     headers["X-CSRF-Token"] = options.csrfToken;
   }
+
   const response = await fetch(url, {
     credentials: "same-origin",
     ...options,
     headers
   });
-  return response.json();
+
+  const text = await response.text();
+  try {
+    const data = text ? JSON.parse(text) : {};
+    if (!response.ok) return { error: data.error || response.statusText || "Request failed", ...data };
+    return data;
+  } catch (err) {
+    if (!response.ok) return { error: response.statusText || "Request failed" };
+    return {};
+  }
 }
 
 async function setupAIChat() {
@@ -45,6 +58,12 @@ async function setupAIChat() {
   aiInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") askAI();
   });
+}
+
+function setDefaultLightTheme() {
+  if (!document.body.classList.contains("light")) {
+    document.body.classList.add("light");
+  }
 }
 
 async function getCsrfToken() {
@@ -80,7 +99,7 @@ async function ensurePageRole(requiredRole) {
   if (!requiredRole) return true;
   const user = await getCurrentUser();
   if (!user) {
-    window.location.href = "/auth.html";
+    window.location.href = "/login.html";
     return false;
   }
   if (user.role !== requiredRole) {
@@ -119,7 +138,7 @@ async function loadArticles() {
 
   document.querySelectorAll(".viewArticleBtn").forEach((button) => {
     button.addEventListener("click", async (event) => {
-      const articleId = event.target.dataset.id;
+      const articleId = event.currentTarget.dataset.id;
       window.location.href = `/article.html?id=${articleId}`;
     });
   });
@@ -181,8 +200,8 @@ async function loadArticleDetail() {
 
   articleContainer.querySelectorAll(".issue-actions button").forEach((button) => {
     button.addEventListener("click", async (event) => {
-      const issueId = event.target.dataset.issueId;
-      const vote = event.target.dataset.vote;
+      const issueId = event.currentTarget.dataset.issueId;
+      const vote = event.currentTarget.dataset.vote;
       const result = await apiFetch("/api/vote", {
         method: "POST",
         body: JSON.stringify({ issueId: parseInt(issueId, 10), vote }),
@@ -297,7 +316,7 @@ async function initAdminDashboard() {
 
     document.querySelectorAll(".selectRss").forEach((button) => {
       button.addEventListener("click", (event) => {
-        const idx = parseInt(event.target.dataset.index, 10);
+        const idx = parseInt(event.currentTarget.dataset.index, 10);
         const item = rssItems[idx];
         populateSelectedItem(item);
       });
@@ -349,13 +368,13 @@ async function initAdminDashboard() {
 
     pendingModeration.querySelectorAll("button").forEach((button) => {
       button.addEventListener("click", async (event) => {
-        const action = event.target.dataset.action;
-        const id = event.target.dataset.id;
+        const action = event.currentTarget.dataset.action;
+        const id = event.currentTarget.dataset.id;
         let path = "";
         if (action === "approve-submission") path = "/api/admin/approve-submission";
-        if (action === "reject-submission") path = "/api/admin/approve-submission";
+        if (action === "reject-submission") path = "/api/admin/reject-submission";
         if (action === "approve-media") path = "/api/admin/approve-media";
-        if (action === "reject-media") path = "/api/admin/approve-media";
+        if (action === "reject-media") path = "/api/admin/reject-media";
         if (!path) return;
 
         const approve = action.startsWith("approve");
@@ -481,6 +500,12 @@ async function initAuthForms() {
       if (result.token) {
         setAuthToken(result.token);
         const role = result.user?.role;
+        const requiredRole = document.body?.dataset?.requiredRole;
+        if (requiredRole && role !== requiredRole) {
+          alert(`This login page is for ${requiredRole} accounts. You will be redirected to your home.`);
+          window.location.href = getRoleHome(role);
+          return;
+        }
         window.location.href = getRoleHome(role);
       } else {
         alert(result.error || "Login failed.");
@@ -490,6 +515,7 @@ async function initAuthForms() {
 }
 
 function initPage() {
+  setDefaultLightTheme();
   initSignOut();
   setupAIChat();
   loadArticles();

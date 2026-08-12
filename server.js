@@ -429,8 +429,47 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.get(["/index.html", "/auth.html", "/reader.html", "/publisher.html", "/admin.html", "/article.html"], (req, res) => {
+// Serve static HTML pages. For role-specific login pages, if an Authorization header
+// is present we enforce that the token's role matches the page; otherwise allow.
+app.get([
+  "/index.html",
+  "/login.html",
+  "/login_reader.html",
+  "/login_publisher.html",
+  "/login_admin.html",
+  "/signup.html",
+  "/signup_reader.html",
+  "/signup_publisher.html",
+  "/signup_admin.html",
+  "/reader.html",
+  "/publisher.html",
+  "/admin.html",
+  "/article.html"
+], (req, res) => {
   const page = req.path === "/" ? "index.html" : req.path.replace(/^\/+/, "");
+
+  // Role enforcement for role-specific login pages when an auth token is provided.
+  const rolePageMap = {
+    "/login_reader.html": "reader",
+    "/login_publisher.html": "publisher",
+    "/login_admin.html": "admin"
+  };
+
+  const requiredRole = rolePageMap[req.path];
+  const authHeader = req.headers.authorization;
+  if (requiredRole && authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.slice(7);
+    try {
+      const payload = jwt.verify(token, JWT_SECRET);
+      if (payload.role && payload.role !== requiredRole) {
+        // If authenticated user has a different role, deny access to this page with a friendly HTML page.
+        return res.status(403).sendFile(path.join(__dirname, "public", "403.html"));
+      }
+    } catch (err) {
+      // If token invalid/expired, allow viewing the login page (user can re-login).
+    }
+  }
+
   res.sendFile(path.join(__dirname, "public", page));
 });
 

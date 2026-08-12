@@ -134,25 +134,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const aiInput = document.getElementById("aiInput");
-  const aiResponse = document.getElementById("aiResponse");
-  const aiSend = document.getElementById("aiSend");
-
-  function askAI() {
-    if (!aiInput || !aiResponse) return;
-    const question = aiInput.value.trim();
-    if (!question) return;
-    aiResponse.textContent = "AI ready: " + question;
-    aiInput.value = "";
-  }
-
-  if (aiSend) {
-    aiSend.addEventListener("click", askAI);
-  }
-
-  if (aiInput) {
-    aiInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") askAI();
-    });
-  }
+  // AI chat UI is handled by app.js. nctheme only manages theme and UI interactions.
 });
