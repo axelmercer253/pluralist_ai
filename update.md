@@ -22,3 +22,5 @@
 20. Standardized the chat footer markup structure across pages while preserving the shared JavaScript IDs and behavior.
 21. Documented backend auth, CSRF token, and database schema initialization helpers used by the server. See `test.md` for ELI5 descriptions.
 22. Documented client-side helper functions for auth, role-aware routing, article rendering, and role-specific page initialization, including `loadArticles()`, `loadArticleDetail()`, `initPublisherForms()`, `initAdminDashboard()`, and `initAuthForms()`. See `test.md` for ELI5 descriptions.
+23. Found a client-side moderation routing bug: reject actions for submissions/media were incorrectly routed to the approve endpoints in `public/app.js`. This is a functional bug (not syntax) and should be changed so reject actions call the correct server endpoints with `approve: false`.
+24. Noted `apiFetch()` currently sets `Content-Type: application/json` for all requests (including GET). Recommendation: only set this header when sending a JSON body to avoid confusing intermediaries and to better match request semantics.
